@@ -146,6 +146,7 @@ const publicFiles = new Set([
   "/academy.html",
   "/outreach.html",
   "/proposals.html",
+  "/playbook.html",
   "/money.html",
   "/freelance.html",
   "/digital.html",

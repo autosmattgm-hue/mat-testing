@@ -1595,6 +1595,12 @@ body.action-drawer-open { overflow: hidden; }
 .quick-ai-panel footer a { color: var(--accent); font-weight: 800; text-decoration: none; }
 .quick-ai-panel footer a:hover { text-decoration: underline; }
 body.quick-ai-open .ai-quick-launcher { transform: rotate(8deg); }
+.sidebar-ai-launcher { width: 100%; }
+.quick-ai-panel .icon-button { flex: 0 0 auto; font-size: 1.1rem; line-height: 1; }
+@media (max-width: 820px) {
+  .quick-ai-panel { right: 12px; bottom: 78px; width: calc(100vw - 24px); max-height: min(680px, calc(100vh - 96px)); border-radius: 18px; }
+  .ai-quick-launcher { right: 14px; bottom: 14px; }
+}
 
 .daily-actions-fab {
   position: fixed;

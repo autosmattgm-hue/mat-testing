@@ -22,6 +22,7 @@ const navGroups = [
       { href: "/ai-agent.html", page: "ai-agent", label: "AI Agent", icon: "A", pro: true },
       { href: "/outreach.html", page: "outreach", label: "Outreach", icon: "O" },
       { href: "/proposals.html", page: "proposals", label: "Client Closer", icon: "P" }
+      ,{ href: "/playbook.html", page: "playbook", label: "Growth Playbook", icon: "G", pro: true }
     ]
   },
   {
