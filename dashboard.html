@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard | MAT LEADS AI PRO X</title>
+    <meta name="description" content="Search Google Maps businesses, audit websites, and manage high-value agency leads.">
+    <link rel="icon" href="/assets/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body data-page="dashboard">
+    <div class="app-layout" data-app-shell>
+      <main class="workspace">
+        <section class="workspace-header dashboard-hero">
+          <div>
+            <span class="dashboard-eyebrow">REVENUE OPERATIONS</span>
+            <h1>Lead command center</h1>
+            <p>Discover qualified businesses, prioritize the right next action, and move opportunities through your pipeline.</p>
+            <div class="dashboard-hero-meta"><span class="dashboard-live-dot"></span><span>Live account workspace</span><span aria-hidden="true">&middot;</span><span data-dashboard-date>Today</span></div>
+          </div>
+          <div class="toolbar">
+            <a class="btn btn-secondary" href="/ai-agent.html">Ask AI Agent</a>
+            <button class="btn btn-secondary" type="button" data-action-center-toggle aria-controls="dailyActionCenter" aria-expanded="false">Daily actions</button>
+            <span class="plan-pill" data-plan-pill>Admin Unlimited</span>
+            <span class="status-pill success" data-usage-pill>All features unlocked</span>
+          </div>
+        </section>
+
+        <section class="notice verify-banner" data-verify-banner hidden>
+          <span>Your email address is not verified yet. Check your inbox for the verification link, or resend it below.</span>
+          <button class="btn btn-ghost" type="button" data-resend-verification>Resend verification email</button>
+        </section>
+
+        <div class="action-drawer-backdrop" data-action-center-backdrop hidden></div>
+        <aside class="panel action-drawer" id="dailyActionCenter" aria-live="polite" aria-hidden="true" aria-labelledby="dailyActionCenterTitle">
+          <div class="action-drawer__header">
+            <div>
+              <span class="action-drawer__eyebrow">OPERATIONS</span>
+              <h2 id="dailyActionCenterTitle">Daily Action Center</h2>
+              <p>Focus on the next actions that move real CRM opportunities forward.</p>
+            </div>
+            <div class="toolbar">
+              <button class="icon-button" type="button" data-action-center-close aria-label="Close daily action center">×</button>
+            </div>
+          </div>
+          <div class="action-drawer__quick-links">
+            <a class="btn btn-secondary" href="/crm.html">Open Pipeline</a>
+            <a class="btn btn-primary" href="#leadSearchForm">Find Leads</a>
+          </div>
+          <div class="action-summary-grid" aria-label="Action summary">
+            <div class="action-summary-card action-summary-card--danger"><span>Overdue</span><strong data-action-count="overdue">—</strong></div>
+            <div class="action-summary-card"><span>Due today</span><strong data-action-count="dueToday">—</strong></div>
+            <div class="action-summary-card"><span>High opportunity</span><strong data-action-count="highOpportunity">—</strong></div>
+            <div class="action-summary-card"><span>Website audits</span><strong data-action-count="websiteAudits">—</strong></div>
+          </div>
+          <div class="action-drawer__toolbar">
+            <div class="action-filter-bar" role="group" aria-label="Filter daily actions">
+              <button class="action-filter is-active" type="button" data-action-filter="all">All</button>
+              <button class="action-filter" type="button" data-action-filter="follow_up">Follow-ups</button>
+              <button class="action-filter" type="button" data-action-filter="high_opportunity">High value</button>
+              <button class="action-filter" type="button" data-action-filter="website_audit">Audits</button>
+            </div>
+            <div class="action-search-row">
+              <label class="sr-only" for="dailyActionSearch">Search actions</label>
+              <input id="dailyActionSearch" type="search" placeholder="Search actions or leads" autocomplete="off">
+              <button class="icon-button" type="button" data-action-refresh aria-label="Refresh daily actions" title="Refresh">Refresh</button>
+            </div>
+          </div>
+          <div id="dailyActionStatus" class="action-drawer__status" aria-live="polite"></div>
+          <div id="dailyActionList" class="action-list"><div class="skeleton">Reviewing your lead actions...</div></div>
+          <footer class="action-drawer__footer">Actions are based on your account's saved CRM records. Nothing is sent automatically.</footer>
+        </aside>
+        <section class="metrics-grid" id="dashboardMetrics" aria-live="polite"></section>
+
+        <section class="dashboard-command-grid" aria-label="Dashboard command center">
+          <article class="panel dashboard-focus-panel">
+            <div class="section-header compact-header">
+              <div><span class="dashboard-eyebrow">TODAY'S FOCUS</span><h2>Turn activity into momentum</h2></div>
+              <a class="text-link" href="/crm.html">Open pipeline <span aria-hidden="true">→</span></a>
+            </div>
+            <div id="dashboardFocus" class="dashboard-focus-content"><div class="skeleton">Preparing your workspace focus...</div></div>
+          </article>
+          <article class="panel dashboard-quick-panel">
+            <div class="section-header compact-header"><div><span class="dashboard-eyebrow">QUICK ACTIONS</span><h2>Move faster</h2></div></div>
+            <div class="dashboard-quick-actions">
+              <a href="#leadSearchForm"><span class="quick-action-icon">+</span><span><strong>Find leads</strong><small>Start a targeted scan</small></span></a>
+              <a href="/website-studio.html"><span class="quick-action-icon">W</span><span><strong>Build a website</strong><small>Create a client-ready draft</small></span></a>
+              <a href="/outreach.html"><span class="quick-action-icon">↗</span><span><strong>Prepare outreach</strong><small>Draft your next message</small></span></a>
+              <a href="/analytics.html"><span class="quick-action-icon">▥</span><span><strong>View analytics</strong><small>Measure your pipeline</small></span></a>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel niche-pack-panel" style="margin-top:14px;">
+          <div class="section-header compact-header">
+            <div>
+              <h2>Revenue Niche Packs</h2>
+              <p>Launch proven high-intent searches with one click.</p>
+            </div>
+          </div>
+          <div class="niche-pack-grid" data-niche-packs></div>
+        </section>
+
+        <section class="panel search-panel" style="margin-top:14px;">
+          <form id="leadSearchForm" class="form-grid">
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="mapLink">Google Maps Link</label>
+              <input id="mapLink" name="mapLink" placeholder="Optional: paste a Google Maps link for an exact area">
+            </div>
+            <div class="field">
+              <label for="country">Countries To Scan</label>
+              <select id="country" name="countries" multiple size="6" aria-label="Countries to scan"></select>
+            </div>
+            <div class="field">
+              <label for="state">State</label>
+              <input id="state" name="state" placeholder="Texas">
+            </div>
+            <div class="field">
+              <label for="city">City</label>
+              <input id="city" name="city" placeholder="Austin">
+            </div>
+            <div class="field">
+              <label for="zip">Zip Code</label>
+              <input id="zip" name="zip" placeholder="78701">
+            </div>
+            <div class="field">
+              <label for="businessTypes">Business Types</label>
+              <select id="businessTypes" name="businessTypes" multiple size="6" aria-label="Business types"></select>
+            </div>
+            <div class="field">
+              <label for="industry">Custom Niche</label>
+              <input id="industry" name="industry" placeholder="boutique hotel, car wash, lawyer">
+            </div>
+            <div class="field">
+              <label for="keyword">Keyword</label>
+              <input id="keyword" name="keyword" placeholder="website redesign" value="">
+            </div>
+            <div class="field">
+              <label for="radiusMeters">Radius</label>
+              <select id="radiusMeters" name="radiusMeters">
+                <option value="5000">5 km</option>
+                <option value="15000" selected>15 km</option>
+                <option value="30000">30 km</option>
+                <option value="50000">50 km</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="searchDepth">Search Strength</label>
+              <select id="searchDepth" name="searchDepth">
+                <option value="quick">Quick</option>
+                <option value="standard">Standard</option>
+                <option value="deep" selected>Deep</option>
+                <option value="maximum">Maximum</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="leadQuality">Lead Quality</label>
+              <select id="leadQuality" name="leadQuality">
+                <option value="all" selected>All Leads</option>
+                <option value="contact_ready">Contact Ready</option>
+                <option value="needs_website">Needs Website</option>
+                <option value="high_opportunity">High Opportunity</option>
+                <option value="owner_data">Owner Data Found</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sortBy">Sort By</label>
+              <select id="sortBy" name="sortBy">
+                <option value="opportunity" selected>Opportunity</option>
+                <option value="contact">Contact Data</option>
+                <option value="website_missing">Missing Website</option>
+                <option value="name">Name</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="minOpportunityScore">Min Score</label>
+              <input id="minOpportunityScore" name="minOpportunityScore" type="number" min="0" max="100" value="0">
+            </div>
+            <div class="field">
+              <label for="limit">Results to Find</label>
+              <select id="limit" name="limit">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+              </select>
+            </div>
+            <div class="field checkbox-field">
+              <label><input id="requireContact" name="requireContact" type="checkbox"> Contact details only</label>
+              <label><input id="missingWebsiteOnly" name="missingWebsiteOnly" type="checkbox"> Missing website only</label>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit" data-search-submit>Search Leads</button>
+              <button class="btn btn-secondary" type="button" data-refresh-leads>Refresh Leads</button>
+              <button class="btn btn-secondary" type="button" data-expand-search>Broaden Area</button>
+              <button class="btn btn-secondary" type="button" data-save-visible-leads>Save All</button>
+              <button class="btn btn-secondary" type="button" data-export-visible-leads>Export CSV</button>
+            </div>
+            <p id="searchNote" class="notice" style="grid-column:1 / -1;">Selected countries and business types control the scan. Free trial users get 2 lead searches with up to 5 leads per search; paid plans unlock higher volume.</p>
+            <p id="searchRunDetails" class="notice" style="grid-column:1 / -1;" aria-live="polite" hidden></p>
+          </form>
+        </section>
+
+        <section class="detail-layout lead-results-workspace">
+          <div class="lead-results-section">
+            <div class="section-header">
+              <div>
+                <h2>Lead Results</h2>
+                <p>Cards include contact data, website status, and opportunity scoring.</p>
+              </div>
+            </div>
+            <section class="panel lead-command-center" aria-label="Lead command center">
+              <div class="section-header compact-header">
+                <div>
+                  <h2>Lead Command Center</h2>
+                  <p>Filter, select, save, export, and clean the current real search results.</p>
+                </div>
+                <div class="toolbar">
+                  <button class="btn btn-secondary" type="button" data-select-visible-leads>Select Visible</button>
+                  <button class="btn btn-secondary" type="button" data-save-selected-leads>Save Selected</button>
+                  <button class="btn btn-secondary" type="button" data-export-selected-leads>Export Selected</button>
+                </div>
+              </div>
+              <div class="form-grid compact lead-command-grid">
+                <div class="field">
+                  <label for="visibleLeadSearch">Search Results</label>
+                  <input id="visibleLeadSearch" placeholder="Business, city, phone, email">
+                </div>
+                <div class="field">
+                  <label for="visibleLeadFilter">Result Filter</label>
+                  <select id="visibleLeadFilter">
+                    <option value="all">All results</option>
+                    <option value="contact_ready">Contact ready</option>
+                    <option value="has_whatsapp">Has WhatsApp action</option>
+                    <option value="needs_website">Needs website</option>
+                    <option value="has_social">Has social links</option>
+                    <option value="high_score">High score</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="visibleLeadMinScore">Minimum Score</label>
+                  <input id="visibleLeadMinScore" type="number" min="0" max="100" value="0">
+                </div>
+                <div class="field">
+                  <label for="leadPageSize">Cards Per Page</label>
+                  <select id="leadPageSize" aria-label="Lead cards per page">
+                    <option value="10">10</option>
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+              </div>
+              <div id="leadCommandSummary" class="notice">Run a search to activate lead filters and bulk actions.</div>
+            </section>
+            <div class="leads-grid" id="leadResults" aria-live="polite">
+              <div class="empty-state">Start a search to discover leads.</div>
+            </div>
+            <div id="leadPagination" aria-label="Lead result pages"></div>
+          </div>
+          <aside class="panel lead-map-panel">
+            <h2>Map Location</h2>
+            <div id="mapPreview" class="map-preview" aria-label="Selected Google Maps area">
+              <iframe title="Germany default map preview" src="https://www.google.com/maps?q=52.52,13.405&amp;z=6&amp;output=embed" loading="lazy"></iframe>
+            </div>
+            <p class="notice" id="mapMeta" style="margin-top:12px;">Default country scan: Germany.</p>
+            <h2 style="margin-top:20px;">Monthly Growth</h2>
+            <div class="chart" id="growthChart"></div>
+          </aside>
+        </section>
+
+        <section class="panel local-vault" style="margin-top:14px;">
+          <div class="section-header">
+            <div>
+              <h2>Local Saved Leads</h2>
+              <p>Saved in this browser and kept after logout until you delete them.</p>
+            </div>
+            <div class="toolbar">
+              <button class="btn btn-secondary" type="button" data-export-local-leads>Export Saved</button>
+              <button class="btn btn-secondary" type="button" data-dedupe-local-leads>Clean Duplicates</button>
+              <button class="btn btn-ghost" type="button" data-clear-local-leads>Clear Saved</button>
+            </div>
+          </div>
+          <div class="form-grid compact local-vault-filters">
+            <div class="field">
+              <label for="localLeadSearch">Search Saved</label>
+              <input id="localLeadSearch" placeholder="Name, city, phone, note">
+            </div>
+            <div class="field">
+              <label for="localLeadStageFilter">Pipeline Stage</label>
+              <select id="localLeadStageFilter">
+                <option value="all">All stages</option>
+                <option>New</option>
+                <option>Contacted</option>
+                <option>Follow Up</option>
+                <option>Proposal Sent</option>
+                <option>Meeting Scheduled</option>
+                <option>Negotiation</option>
+                <option>Won</option>
+                <option>Lost</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="localLeadDueFilter">Follow-Up</label>
+              <select id="localLeadDueFilter">
+                <option value="all">All saved leads</option>
+                <option value="due">Due now</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="none">No reminder</option>
+              </select>
+            </div>
+          </div>
+          <div id="localSavedLeadSummary" class="notice">No local saved leads yet.</div>
+          <div class="leads-grid" id="localSavedLeads" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/components/layout.js"></script>
+    <script type="module" src="/js/app.js"></script>
+    <script type="module" src="/js/dashboard.js"></script>
+    <script type="module" src="/js/leads.js"></script>
+  </body>
+</html>
