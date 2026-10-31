@@ -1,0 +1,11 @@
+=== https://gen.pollinations.ai/v1/models -> HTTP 200
+count=0
+
+
+=== https://text.pollinations.ai/models -> HTTP 200
+count=1
+openai-fast
+
+=== https://gen.pollinations.ai/v1/models?category=text -> HTTP 200
+count=0
+

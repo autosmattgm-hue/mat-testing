@@ -1,0 +1,2 @@
+[1p modern] OK 33070ms  model=openai-fast           len=6482   pages=1 w=124   style=2 img=4   det=0   form=0   picsum=4 fence=0 doctype=true emptyImg=false
+wrote logs/_e2e2.txt.html (6482 chars)
