@@ -3,23 +3,25 @@ import { apiFetch, isProUser } from "./api.js";
 let busy = false;
 
 function createPanel() {
-  if (document.getElementById("quickAiPanel")) return document.getElementById("quickAiPanel");
+  const existing = document.getElementById("quickAiPanel");
+  if (existing) return existing;
   const panel = document.createElement("section");
   panel.id = "quickAiPanel";
   panel.className = "quick-ai-panel";
   panel.hidden = true;
   panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-modal", "false");
   panel.setAttribute("aria-labelledby", "quickAiTitle");
   panel.innerHTML = `
     <header class="quick-ai-header">
       <div><span class="quick-ai-kicker">MAT LEADS AI</span><h2 id="quickAiTitle">Ask your agent</h2><p>Account-aware guidance, right where you work.</p></div>
-      <button type="button" class="icon-button" data-ai-quick-close aria-label="Close AI Agent">x</button>
+      <button type="button" class="icon-button" data-ai-quick-close aria-label="Close AI Agent">×</button>
     </header>
     <div class="quick-ai-messages" data-ai-quick-messages aria-live="polite">
-      <div class="quick-ai-welcome"><strong>What should we work on?</strong><span>Ask about your saved leads, follow-ups, conversion rate, or next best action.</span></div>
+      <div class="quick-ai-welcome"><strong>What should we work on?</strong><span>Ask about your saved leads, follow-ups, conversion rate, a feature that is not working, or your next best action.</span></div>
     </div>
-    <div class="quick-ai-prompts"><button type="button" data-ai-prompt="Which lead should I contact first?">Contact priority</button><button type="button" data-ai-prompt="What are my most important actions today?">Today's actions</button></div>
-    <form class="quick-ai-form" data-ai-quick-form><textarea data-ai-quick-input rows="1" placeholder="Ask the AI Agent..." required></textarea><button class="quick-ai-send" type="submit" aria-label="Send message">→</button></form>
+    <div class="quick-ai-prompts"><button type="button" data-ai-prompt="Which lead should I contact first?">Contact priority</button><button type="button" data-ai-prompt="What are my most important actions today?">Today’s actions</button><button type="button" data-ai-prompt="Something in MAT LEADS is not working. Help me diagnose it step by step.">Report an issue</button></div>
+    <form class="quick-ai-form" data-ai-quick-form><textarea data-ai-quick-input rows="1" placeholder="Ask a question or describe what is not working…" required></textarea><button class="quick-ai-send" type="submit" aria-label="Send message">→</button></form>
     <footer><a href="/ai-agent.html">Open full AI Agent</a><span>AI never sends messages or changes records automatically.</span></footer>
   `;
   document.body.append(panel);
@@ -30,8 +32,8 @@ function appendMessage(panel, text, role) {
   const message = document.createElement("div");
   message.className = `quick-ai-message quick-ai-message--${role}`;
   message.textContent = text;
-  panel.querySelector("[data-ai-quick-messages]").append(message);
   const list = panel.querySelector("[data-ai-quick-messages]");
+  list.append(message);
   list.scrollTop = list.scrollHeight;
   return message;
 }
@@ -52,11 +54,11 @@ async function sendMessage(panel, text) {
   if (send) send.disabled = true;
   panel.querySelector(".quick-ai-welcome")?.remove();
   appendMessage(panel, text, "user");
-  const pending = appendMessage(panel, "Analysing your account...", "pending");
+  const pending = appendMessage(panel, "Analysing your workspace…", "pending");
   try {
     const session = await apiFetch("/api/auth/me");
     const user = session?.user || {};
-    if (!isProUser(user)) throw new Error("AI Agent is available on Pro or Admin plans. Open the full Agent page to upgrade.");
+    if (!isProUser(user)) throw new Error("AI Agent chat is available on Pro or Admin plans. Open Pricing to upgrade when you are ready.");
     const status = await apiFetch("/api/ai/status");
     if (!status.configured) throw new Error(status.hint || "AI is not configured on this deployment.");
     const result = await apiFetch("/api/ai/agent", { method: "POST", body: JSON.stringify({ prompt: text }) });
@@ -74,9 +76,8 @@ async function sendMessage(panel, text) {
 
 function init() {
   const panel = createPanel();
-  let launcher = document.querySelector("[data-ai-quick-toggle]");
-  if (!launcher) {
-    launcher = document.createElement("button");
+  if (!document.querySelector(".ai-quick-launcher")) {
+    const launcher = document.createElement("button");
     launcher.className = "ai-quick-launcher";
     launcher.type = "button";
     launcher.dataset.aiQuickToggle = "";
@@ -87,8 +88,19 @@ function init() {
     launcher.innerHTML = "<span aria-hidden=\"true\">AI</span>";
     document.body.append(launcher);
   }
-  document.querySelectorAll("[data-ai-quick-toggle]").forEach((button) => button.addEventListener("click", () => setOpen(panel, !panel.hidden)));
-  panel.querySelector("[data-ai-quick-close]")?.addEventListener("click", () => setOpen(panel, false));
+
+  // Delegation makes the drawer reliable in cached/PWA pages where the
+  // application shell can paint after this module is evaluated.
+  document.addEventListener("click", (event) => {
+    const launcher = event.target.closest("[data-ai-quick-toggle]");
+    if (launcher) {
+      event.preventDefault();
+      setOpen(panel, panel.hidden);
+      return;
+    }
+    if (event.target.closest("[data-ai-quick-close]")) setOpen(panel, false);
+  });
+
   panel.querySelectorAll("[data-ai-prompt]").forEach((button) => button.addEventListener("click", () => sendMessage(panel, button.dataset.aiPrompt || "")));
   panel.querySelector("[data-ai-quick-form]")?.addEventListener("submit", (event) => {
     event.preventDefault();

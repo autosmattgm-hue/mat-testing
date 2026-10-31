@@ -26,7 +26,7 @@ function setBusy(isBusy) {
     generate.disabled = isBusy;
     generate.textContent = isBusy ? "Generating a real draft..." : "Generate an editable draft";
   }
-  ["outCopy", "outWa", "outInvoice"].forEach((id) => {
+  ["outCopy", "outWa", "outRecord", "outInvoice"].forEach((id) => {
     const button = byId(id);
     if (button) button.disabled = isBusy || !hasDraft;
   });
@@ -176,6 +176,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const popup = window.open(`https://wa.me/?text=${encodeURIComponent((byId("outResult").textContent || lastText).slice(0, 1500))}`, "_blank", "noopener,noreferrer");
     if (popup) popup.opener = null;
     setStatus(popup ? "WhatsApp opened with your editable draft. Review it before sending." : "Your browser blocked the WhatsApp window. Allow pop-ups and try again.", popup ? "success" : "error");
+  });
+
+  byId("outRecord")?.addEventListener("click", async () => {
+    if (!lastLead || !lastText || busy) return;
+    setBusy(true);
+    setStatus("Recording outreach activity…");
+    try {
+      await apiFetch(`/api/crm/leads/${encodeURIComponent(lastLead)}/outreach`, {
+        method: "POST",
+        body: JSON.stringify({ channel: byId("outType").value === "cold_email" ? "email" : "other", type: byId("outType").value, message: (byId("outResult").textContent || lastText).slice(0, 5000), outcome: "drafted" })
+      });
+      setStatus("Outreach activity recorded in CRM. The lead moved to Contacted when appropriate.", "success");
+    } catch (error) { setStatus(error.message || "Outreach activity could not be recorded.", "error"); }
+    finally { setBusy(false); }
   });
 
   byId("outInvoice")?.addEventListener("click", async () => {

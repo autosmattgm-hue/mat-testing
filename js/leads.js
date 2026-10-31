@@ -1531,6 +1531,10 @@ function renderLead(lead) {
   const whatsappFound = whatsapp ? `<span class="tag success">${escapeHtml(whatsapp.status)}</span>` : "";
   const contactReady = (phone || publicEmail || lead.social || Object.keys(socialLinks).length) ? `<span class="tag success">Contact ready</span>` : "";
   const websiteGap = !lead.websiteUrl ? `<span class="tag warning">Needs website</span>` : "";
+  const enrichmentConfidence = Number(lead.details?.enrichment?.confidence);
+  const confidenceTag = Number.isFinite(enrichmentConfidence) && enrichmentConfidence > 0
+    ? `<span class="tag" title="Based on publicly observed business fields">Data confidence ${enrichmentConfidence}%</span>`
+    : "";
   return `
     <article class="lead-card">
       <div class="lead-card__top">
@@ -1556,6 +1560,7 @@ function renderLead(lead) {
         ${whatsappFound}
         ${contactReady}
         ${websiteGap}
+        ${confidenceTag}
         ${storedResult}
         ${source}
       </div>
