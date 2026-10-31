@@ -1,4 +1,4 @@
-const CACHE_NAME = "mat-leads-ai-pro-x-v52";
+const CACHE_NAME = "mat-leads-ai-pro-x-v53";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -57,6 +57,7 @@ const STATIC_ASSETS = [
   "/js/firebase-auth.js",
   "/js/dashboard.js",
   "/js/leads.js",
+  "/js/saved-searches.js",
   "/js/tools.js",
   "/js/work-planner.js",
   "/js/tool-engine.js",

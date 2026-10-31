@@ -204,6 +204,23 @@
           </form>
         </section>
 
+        <section class="panel saved-search-panel" aria-labelledby="savedSearchHeading">
+          <div class="section-header compact-header">
+            <div>
+              <h2 id="savedSearchHeading">Saved search library</h2>
+              <p>Save a high-intent search once, then reuse its exact filters without rebuilding the form.</p>
+            </div>
+            <span class="tag">Account synced</span>
+          </div>
+          <form id="savedSearchForm" class="toolbar" style="margin-top:12px;">
+            <label class="sr-only" for="savedSearchName">Saved search name</label>
+            <input id="savedSearchName" name="name" required maxlength="100" placeholder="e.g. Austin restaurants without websites">
+            <button class="btn btn-secondary" type="submit">Save current filters</button>
+            <span id="savedSearchStatus" class="muted-value" role="status" aria-live="polite"></span>
+          </form>
+          <div id="savedSearchList" class="saved-search-list" aria-live="polite"><span class="muted-value">Loading saved searches…</span></div>
+        </section>
+
         <section class="detail-layout lead-results-workspace">
           <div class="lead-results-section">
             <div class="section-header">
@@ -321,5 +338,6 @@
     <script type="module" src="/js/app.js"></script>
     <script type="module" src="/js/dashboard.js"></script>
     <script type="module" src="/js/leads.js"></script>
+    <script type="module" src="/js/saved-searches.js"></script>
   </body>
 </html>
