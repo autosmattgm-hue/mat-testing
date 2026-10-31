@@ -256,6 +256,17 @@ function enrichLeadFromAudit(lead, audit) {
     websiteScanSource: profile.source,
     websiteExtractedAt: profile.finalUrl ? new Date().toISOString() : ""
   });
+  const evidence = {
+    name: Boolean(normalizedLead.name),
+    address: Boolean(normalizedLead.address || normalizedLead.details?.location?.address),
+    phone: Boolean(phone),
+    email: Boolean(email),
+    website: Boolean(websiteUrl),
+    social: Object.keys(social).length > 0,
+    websiteScan: Boolean(profile.finalUrl)
+  };
+  const confirmedFields = Object.values(evidence).filter(Boolean).length;
+  const confidence = Math.round((confirmedFields / Object.keys(evidence).length) * 100);
   return {
     ...normalizedLead,
     phone,
@@ -268,6 +279,13 @@ function enrichLeadFromAudit(lead, audit) {
       social,
       business,
       source,
+      enrichment: {
+        confidence,
+        confirmedFields: Object.entries(evidence).filter(([, confirmed]) => confirmed).map(([field]) => field),
+        evidence,
+        lastCheckedAt: new Date().toISOString(),
+        policy: "Only publicly observed map or website fields are included; missing fields remain unverified."
+      },
       publicWebsiteProfile: profile.finalUrl ? {
         finalUrl: profile.finalUrl,
         emails: profile.emails || [],

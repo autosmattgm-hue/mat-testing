@@ -14,9 +14,10 @@ import { NvidiaService } from "./services/nvidiaService.js";
 import { WebsiteService } from "./services/websiteService.js";
 import { EarnService } from "./services/earnService.js";
 import { GigService } from "./services/gigService.js";
+import { SavedSearchService } from "./services/savedSearchService.js";
 import { isAdminUser } from "./utils/entitlements.js";
 import { AppError } from "./utils/errors.js";
-import { aiSchemas, authSchemas, billingSchema, crmSchemas, earnSchemas, gigSchemas, leadSearchSchema, paypalConfirmationSchema, profileSchema, settingsSchema } from "./utils/schemas.js";
+import { aiSchemas, authSchemas, billingSchema, crmSchemas, earnSchemas, gigSchemas, leadSearchSchema, paypalConfirmationSchema, profileSchema, savedSearchSchemas, settingsSchema } from "./utils/schemas.js";
 import { verifyAccessToken } from "./middleware/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +35,7 @@ const nvidiaService = new NvidiaService();
 const websiteService = new WebsiteService();
 const earnService = new EarnService();
 const gigService = new GigService(earnService);
+const savedSearchService = new SavedSearchService();
 
 function canUseProAi(user = {}) {
   if (isAdminUser(user)) return true;
@@ -231,7 +233,7 @@ function applyCors(req, res) {
   }
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Idempotency-Key");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
 }
 
 function clientIp(req) {
@@ -727,6 +729,39 @@ const routes = [
     handler: async ({ req }) => ({ leads: await crmService.listLeads(await getUser(req)) })
   },
   {
+    method: "GET",
+    regex: /^\/api\/saved-searches$/,
+    keys: [],
+    handler: async ({ req }) => ({ searches: await savedSearchService.list(await getUser(req)) })
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/saved-searches$/,
+    keys: [],
+    handler: async ({ req, body }) => ({ search: await savedSearchService.create(await getUser(req), validate(savedSearchSchemas.create, body)) }),
+    status: 201
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/saved-searches\/([^/]+)\/run$/,
+    keys: ["id"],
+    handler: async ({ req, params }) => {
+      const search = await savedSearchService.markRun(params.id, await getUser(req));
+      if (!search) throw new AppError("Saved search not found.", 404, "SAVED_SEARCH_NOT_FOUND");
+      return { search };
+    }
+  },
+  {
+    method: "DELETE",
+    regex: /^\/api\/saved-searches\/([^/]+)$/,
+    keys: ["id"],
+    handler: async ({ req, params }) => {
+      const removed = await savedSearchService.remove(params.id, await getUser(req));
+      if (!removed) throw new AppError("Saved search not found.", 404, "SAVED_SEARCH_NOT_FOUND");
+      return { removed: true };
+    }
+  },
+  {
     method: "PATCH",
     regex: /^\/api\/crm\/leads\/([^/]+)\/stage$/,
     keys: ["id"],
@@ -744,6 +779,17 @@ const routes = [
     handler: async ({ req, body, params }) => {
       const payload = validate(crmSchemas.note, body);
       return { activity: await crmService.addNote(params.id, payload.note, payload.tags, await getUser(req)) };
+    },
+    status: 201
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/crm\/leads\/([^/]+)\/outreach$/,
+    keys: ["id"],
+    handler: async ({ req, body, params }) => {
+      const activity = await crmService.recordOutreach(params.id, validate(crmSchemas.outreachActivity, body), await getUser(req));
+      if (!activity) throw new AppError("Lead not found.", 404, "LEAD_NOT_FOUND");
+      return { activity };
     },
     status: 201
   },

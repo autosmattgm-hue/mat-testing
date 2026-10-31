@@ -3242,3 +3242,16 @@ details.faq-item .faq-answer {
   .lead-results-workspace #leadResults { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 }
 
+.saved-search-panel { margin-top: 14px; }
+.saved-search-panel > .toolbar { align-items: center; flex-wrap: wrap; }
+.saved-search-panel input { min-width: min(360px, 100%); flex: 1 1 240px; }
+.saved-search-list { display: grid; gap: 8px; margin-top: 14px; }
+.saved-search-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid var(--border, #e5e7eb); border-radius: 12px; background: var(--surface-subtle, #fafafa); }
+.saved-search-item > div:first-child { display: grid; gap: 3px; min-width: 0; }
+.saved-search-item .toolbar { margin: 0; flex-wrap: nowrap; }
+@media (max-width: 640px) {
+  .saved-search-item { align-items: flex-start; flex-direction: column; }
+  .saved-search-item .toolbar { width: 100%; }
+  .saved-search-item .btn { flex: 1; }
+}
+

@@ -269,7 +269,24 @@ export const crmSchemas = {
       note: stringField(input, "note", { required: true, min: 1, max: 4000 }),
       tags
     };
-  })
+  }),
+  outreachActivity: schema((input) => ({
+    channel: enumField(input, "channel", ["email", "whatsapp", "phone", "other"], { default: "email" }),
+    type: stringField(input, "type", { max: 80, truncate: true, default: "outreach" }),
+    message: stringField(input, "message", { max: 5000, truncate: true }),
+    outcome: stringField(input, "outcome", { max: 120, truncate: true, default: "drafted" }),
+    nextActionAt: stringField(input, "nextActionAt", { max: 40, truncate: true })
+  }))
+};
+
+export const savedSearchSchemas = {
+  create: schema((input) => {
+    const name = stringField(input, "name", { required: true, min: 1, max: 100 });
+    const config = input.config && typeof input.config === "object" && !Array.isArray(input.config) ? input.config : {};
+    if (JSON.stringify(config).length > 10000) throw validationError({ config: ["Search configuration is too large"] });
+    return { name, config };
+  }),
+  run: schema((input) => ({ id: stringField(input, "id", { required: true, min: 1, max: 100 }) }))
 };
 
 const outreachTypes = ["cold_email", "follow_up", "website_redesign", "seo", "marketing", "ai_automation", "business_audit"];

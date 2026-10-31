@@ -51,4 +51,26 @@ export class CrmService {
       tags
     });
   }
+
+  async recordOutreach(id, data, user) {
+    const existing = await this.leads.findById(id);
+    if (!existing || (!isAdminUser(user) && existing.ownerId !== user?.uid)) return null;
+    const activity = await this.activities.create({
+      leadId: id,
+      actor: user?.email,
+      action: "outreach_recorded",
+      channel: data.channel,
+      type: data.type,
+      message: data.message,
+      outcome: data.outcome,
+      nextActionAt: data.nextActionAt
+    });
+    await this.leads.upsert(id, {
+      ...existing,
+      lastContactAt: new Date().toISOString(),
+      nextActionAt: data.nextActionAt || existing.nextActionAt || "",
+      stage: existing.stage === "New" ? "Contacted" : existing.stage
+    });
+    return activity;
+  }
 }
