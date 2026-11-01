@@ -6,6 +6,7 @@
       "maxDuration": 60
     }
   },
+  "installCommand": "env -u npm_config_cache_dir -u NPM_CONFIG_CACHE_DIR -u pnpm_config_cache_dir -u PNPM_CONFIG_CACHE_DIR npm install",
   "rewrites": [
     {
       "source": "/api/(.*)",
